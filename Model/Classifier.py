@@ -20,7 +20,7 @@ def mse(y_true, y_pred):
 tf.keras.utils.get_custom_objects().update({'mse': mse})
 
 # Load the model with the custom loss function
-model = tf.keras.models.load_model('D:/Projetos/SistemasSensiveisAoContexto/proj/100_3x3_1c.h5',
+model = tf.keras.models.load_model('C:/dev-mei/SSC/graphDOTifier/Model/100_3x3_1c.h5',
                                    custom_objects={'mse': mse})
 
 # Define image size (adjust as needed)
@@ -65,7 +65,6 @@ def visualize_predictions(img, class_predictions, bbox_predictions):
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     ax.axis('off')
-    plt.show()
 
     return figure_to_base64(fig)
 
