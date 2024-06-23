@@ -1,3 +1,4 @@
+import base64
 import socket
 from io import BytesIO
 
@@ -10,7 +11,7 @@ import Model.Classifier as classifier
 app = Flask(__name__)
 
 
-@app.route('/classify', methods=['GET'])
+@app.route('/classify', methods=['POST'])
 def classify():
     if not request.files:
         return {'error': 'No files uploaded'}, 400
@@ -22,12 +23,8 @@ def classify():
     if class_predictions is None or bbox_predictions is None:
         return jsonify({"error": "Error processing image"}), 500
 
-    classifier.visualize_predictions(graph, class_predictions, bbox_predictions)
-
-    return jsonify({
-        "class_predictions": class_predictions.tolist(),  # Convert numpy arrays to lists for JSON serialization
-        "bbox_predictions": bbox_predictions.tolist()
-    }), 200
+    fig = classifier.visualize_predictions(graph, class_predictions, bbox_predictions)
+    return jsonify(fig), 200
 
 
 

@@ -1,3 +1,4 @@
+import base64
 from io import BytesIO
 import cv2
 import numpy as np
@@ -61,10 +62,12 @@ def visualize_predictions(img, class_predictions, bbox_predictions):
         # Print the bounding box coordinates
         print(f"Bounding Box {i}: x1={x1}, y1={y1}, x2={x2}, y2={y2}, Confidence={confidence:.2f}")
 
-    plt.figure(figsize=(10, 10))
-    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    plt.axis('off')
+    fig, ax = plt.subplots(figsize=(10, 10))
+    ax.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    ax.axis('off')
     plt.show()
+
+    return figure_to_base64(fig)
 
 
 def resize(graph):
@@ -75,4 +78,21 @@ def resize(graph):
     img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     img = cv2.resize(img, img_size)
     return img
+
+
+def figure_to_base64(fig):
+    # Save the figure to a BytesIO object
+    buf = BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)  # Rewind the buffer
+
+    # Convert the saved figure to a PIL Image
+    img = Image.open(buf)
+
+    # Convert PIL Image to base64 encoded string
+    buffered = BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+    return img_str
 
